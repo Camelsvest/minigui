@@ -16,6 +16,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>
+#include <time.h>
 
 #include "common.h"
 #include "minigui.h"
@@ -1025,10 +1027,19 @@ int GUIAPI DispatchMessage (PMSG pMsg)
 #endif
     int iRet;
 
+#ifdef _MGHAVE_TRACE_MSG
+    struct timeval tv;
+    struct tm result;
+#endif
+
     LICENSE_MODIFY_MESSAGE(pMsg);
 
 #ifdef _MGHAVE_TRACE_MSG
-    fprintf (stderr, "Message, %s: hWnd: %x, wP: %x, lP: %lx. %s\n",
+    gettimeofday(&tv, NULL);
+    gmtime_r(&tv.tv_sec, &result);
+    
+    fprintf (stderr, "%02d:%02d:%02d.%06ld Message, %s: hWnd: %x, wP: %x, lP: %lx. %s\n",
+        result.tm_hour, result.tm_min, result.tm_sec, tv.tv_usec,
         Message2Str (pMsg->message),
         pMsg->hwnd,
         pMsg->wParam,
@@ -1070,7 +1081,11 @@ int GUIAPI DispatchMessage (PMSG pMsg)
 #endif
 
 #ifdef _MGHAVE_TRACE_MSG
-    fprintf (stderr, "Message, %s done, return value: %x\n",
+    gettimeofday(&tv, NULL);
+    gmtime_r(&tv.tv_sec, &result);
+
+    fprintf (stderr, "%02d:%02d:%02d.%06ld Message, %s done, return value: %x\n",
+        result.tm_hour, result.tm_min, result.tm_sec, tv.tv_usec,
         Message2Str (pMsg->message), iRet);
 #endif
 
