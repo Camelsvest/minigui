@@ -135,7 +135,7 @@ again:
     }
 }
 
-inline void* get_zi_from_client(int cli) 
+void* get_zi_from_client(int cli) 
 {
     return (((cli>0)?mgClients[cli].layer:mgTopmostLayer)->zorder_info);
 }
